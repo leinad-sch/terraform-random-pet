@@ -1,0 +1,49 @@
+name: 'Test PR'
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types: [
+      'opened',
+      'reopened',
+      'synchronize',
+    ]
+
+permissions: read-all
+
+jobs:
+  misc-checks:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: ".scripts/misc_checks.sh"
+
+  yamllint:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: ".scripts/yamllint.sh"
+
+  shellcheck:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: ".scripts/shellcheck.sh"
+
+  checkov-github-actions:
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          fetch-depth: 0
+      - run: .scripts/checkov.sh ./.github/
