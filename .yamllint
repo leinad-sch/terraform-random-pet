@@ -1,0 +1,25 @@
+extends: default
+
+rules:
+  document-start: disable
+  empty-lines:
+    level: warning
+  line-length: disable
+  brackets:
+    forbid: false
+    min-spaces-inside: 0
+    max-spaces-inside: 1
+  truthy:
+    check-keys: false
+
+  # These start with the magic comment "#cloud-init", and it might break the
+  # user data script handling if we change this
+  comments:
+    require-starting-space: false
+
+# These files are not maintained by us
+ignore: |
+  /.terraform/
+  /.terragrunt-cache/
+  /vendor/
+  /node_modules/

@@ -1,0 +1,12 @@
+<component name="ProjectCodeStyleConfiguration">
+  <code_scheme name="Project" version="173">
+    <option name="SOFT_MARGINS" value="120" />
+    <HCL-Terraform>
+      <option name="RUN_TF_FMT_ON_REFORMAT" value="true" />
+      <option name="IMPORT_PROVIDERS_AUTOMATICALLY" value="false" />
+    </HCL-Terraform>
+    <codeStyleSettings language="HCL-Terraform">
+      <option name="RIGHT_MARGIN" value="300" />
+    </codeStyleSettings>
+  </code_scheme>
+</component>

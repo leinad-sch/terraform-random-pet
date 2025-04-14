@@ -1,0 +1,20 @@
+node_modules/
+.peru/
+peru.yaml
+
+# ignored dependencies
+.scripts/rotate-deploy-key.sh
+.scripts/encrypt-deploy-key.js
+
+# IDE - IntelliJ
+/.idea/*
+# Keep the code styles.
+!/.idea/codeStyles
+/.idea/codeStyles/*
+!/.idea/codeStyles/Project.xml
+!/.idea/codeStyles/codeStyleConfig.xml
+# Keep the inspection levels
+!/.idea/inspectionProfiles
+/.idea/inspectionProfiles/*
+!/.idea/inspectionProfiles/Project_Default.xml
+

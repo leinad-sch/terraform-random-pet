@@ -1,0 +1,76 @@
+name: 'Test Terraform PR'
+
+# Controls when the action will run. Triggers the workflow on push or pull request
+# events but only for the master branch
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types: [
+      'opened',
+      'reopened',
+      'synchronize',
+    ]
+
+permissions: read-all
+
+jobs:
+  list-terraform-directories:
+    runs-on: [ ubuntu-latest ]
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - id: set-matrix
+        run: |
+          terraform_directories="$(.scripts/list_terraform_directories.sh)"
+          [[ -z "$terraform_directories" ]] && \
+            matrix="[]" || \
+            matrix="$(echo "$terraform_directories" | jq -cR './" "')"
+          echo "$matrix" | jq .
+          echo "matrix=$matrix" >> "$GITHUB_OUTPUT"
+
+  checkov:
+    needs: [ list-terraform-directories ]
+    if: needs.list-terraform-directories.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform-directory: ${{ fromJson(needs.list-terraform-directories.outputs.matrix) }}
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: .scripts/checkov.sh ${{ matrix.terraform-directory }}
+
+  tflint:
+    needs: [ list-terraform-directories ]
+    if: needs.list-terraform-directories.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform-directory: ${{ fromJson(needs.list-terraform-directories.outputs.matrix) }}
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: .scripts/tflint.sh ${{ matrix.terraform-directory }}
+
+  terraform-fmt:
+    needs: [ list-terraform-directories ]
+    if: needs.list-terraform-directories.outputs.matrix != '[]'
+    strategy:
+      fail-fast: false
+      matrix:
+        terraform-directory: ${{ fromJson(needs.list-terraform-directories.outputs.matrix) }}
+    runs-on: [ ubuntu-latest ]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - run: .scripts/terraform-fmt.sh ${{ matrix.terraform-directory }}

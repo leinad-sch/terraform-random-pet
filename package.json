@@ -1,0 +1,32 @@
+{
+  "name": "@leinad-sch/terraform-random-pet",
+  "version": "0.0.0",
+  "description": "",
+  "scripts": {
+    "release": "commit-and-tag-version",
+    "prepare-release": ".scripts/prepare-release.sh",
+    "is-release": "commit-and-tag-version --dry-run | grep '^\\*' > /dev/null",
+    "commit-and-tag-version": "commit-and-tag-version",
+    "t": "npm run test",
+    "test": "./node_modules/.bin/run-p -l --aggregate-output test:*",
+    "build": "./node_modules/.bin/run-p -l --aggregate-output build:*",
+    "build:generate-terraform-docs": "time .scripts/generate_teraform_docs.sh",
+    "install": "if [[ $CI == true ]]; then npm run install-ci; else time ./install.sh; fi",
+    "install-dev": "npm install --omit=optional",
+    "install-ci": "npm install --include=dev --ignore-scripts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/leinad-sch/terraform-random-pet.git"
+  },
+  "author": "Leinad Sch <schleinadsch@gmail.com>",
+  "license": "MPL-2.0",
+  "dependencies": {},
+  "optionalDependencies": {
+    "commit-and-tag-version": "^12.5.0"
+  },
+  "devDependencies": {
+    "npm-run-all": "^4.1.5",
+    "libsodium-wrappers": "0.7.15"
+  }
+}
